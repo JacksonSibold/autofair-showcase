@@ -1,12 +1,22 @@
 import { NextRequest, NextResponse } from "next/server";
+import { parseMakeName, parseModelYear } from "@/lib/validation";
 
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
-  const make = searchParams.get("make");
-  const year = searchParams.get("year");
+  const make = parseMakeName(searchParams.get("make"));
+  const yearParam = searchParams.get("year");
 
   if (!make) {
-    return NextResponse.json({ error: "make is required" }, { status: 400 });
+    return NextResponse.json({ error: "A valid make is required" }, { status: 400 });
+  }
+
+  let year: string | null = null;
+  if (yearParam) {
+    const parsedYear = parseModelYear(yearParam);
+    if (!parsedYear) {
+      return NextResponse.json({ error: "Invalid year" }, { status: 400 });
+    }
+    year = String(parsedYear);
   }
 
   try {
