@@ -210,6 +210,8 @@ export default function NegotiatePage({ params }: Props) {
                   {COLORS.map((c) => (
                     <button
                       key={c}
+                      type="button"
+                      aria-pressed={color === c}
                       onClick={() => setColor(c)}
                       className={cn(
                         "px-3 py-1.5 rounded-full border text-sm transition-colors",
@@ -230,6 +232,8 @@ export default function NegotiatePage({ params }: Props) {
                   {TRANSMISSIONS.map((t) => (
                     <button
                       key={t}
+                      type="button"
+                      aria-pressed={transmission === t}
                       onClick={() => setTransmission(t)}
                       className={cn(
                         "px-3 py-1.5 rounded-full border text-sm transition-colors",
@@ -253,6 +257,8 @@ export default function NegotiatePage({ params }: Props) {
                   {OPTIONS.map((opt) => (
                     <button
                       key={opt}
+                      type="button"
+                      aria-pressed={selectedOptions.includes(opt)}
                       onClick={() => toggleOption(opt)}
                       className={cn(
                         "px-3 py-1.5 rounded-full border text-xs transition-colors",
@@ -276,6 +282,8 @@ export default function NegotiatePage({ params }: Props) {
                   {PRIORITIES.map((p) => (
                     <button
                       key={p.value}
+                      type="button"
+                      aria-pressed={priority === p.value}
                       onClick={() => setPriority(p.value)}
                       className={cn(
                         "w-full text-left p-3 rounded-lg border transition-colors",
