@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import type { VehicleDecodeResult } from "@/types";
+import { isValidVin, parseMakeName, parseModelYear } from "@/lib/validation";
 
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
@@ -12,14 +13,19 @@ export async function GET(request: NextRequest) {
     return decodeVin(vin.toUpperCase());
   }
   if (make && year) {
-    return lookupMakeModel(make, model, year);
+    const parsedMake = parseMakeName(make);
+    const parsedYear = parseModelYear(year);
+    if (!parsedMake || !parsedYear) {
+      return NextResponse.json({ error: "Invalid make or year" }, { status: 400 });
+    }
+    return lookupMakeModel(parsedMake, model?.trim() || null, String(parsedYear));
   }
 
   return NextResponse.json({ error: "Provide either vin or make+year" }, { status: 400 });
 }
 
 async function decodeVin(vin: string): Promise<NextResponse> {
-  if (!/^[A-HJ-NPR-Z0-9]{17}$/.test(vin)) {
+  if (!isValidVin(vin)) {
     return NextResponse.json({ error: "Invalid VIN format" }, { status: 400 });
   }
 
