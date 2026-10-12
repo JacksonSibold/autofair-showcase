@@ -132,7 +132,7 @@ function estimatePricingFromHeuristics(params: PricingParams): Partial<PricingRe
   };
 }
 
-function calcColorRarity(color: string | undefined, listings: ComparableListing[]): number {
+export function calcColorRarity(color: string | undefined, listings: ComparableListing[]): number {
   if (!color || listings.length === 0) return 0.5;
   const norm = color.toLowerCase();
   const matching = listings.filter((l) =>
@@ -143,7 +143,7 @@ function calcColorRarity(color: string | undefined, listings: ComparableListing[
   return Math.round((1 - ratio) * 100) / 100;
 }
 
-function calcStats(prices: number[]): {
+export function calcStats(prices: number[]): {
   avg: number;
   low: number;
   high: number;
