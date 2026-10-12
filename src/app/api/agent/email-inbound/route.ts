@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServiceClient } from "@/lib/supabase/server";
 import { processInboundMessage } from "@/lib/negotiation/agent";
+import { extractEmailAddress } from "@/lib/communication/email";
 
 export const dynamic = "force-dynamic";
 
@@ -34,7 +35,7 @@ export async function POST(request: NextRequest) {
   const { data: dealerNeg } = await supabase
     .from("dealer_negotiations")
     .select("*, negotiations(*)")
-    .eq("alias_email", toEmail.split("<").pop()?.replace(">", "").trim() ?? toEmail)
+    .eq("alias_email", extractEmailAddress(toEmail))
     .single();
 
   if (!dealerNeg) {
