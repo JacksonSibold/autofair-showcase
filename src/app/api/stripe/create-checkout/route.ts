@@ -28,6 +28,20 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "negotiation_id must be a UUID" }, { status: 400 });
   }
 
+  // The Stripe webhook marks the referenced negotiation as paid, so the caller
+  // must own it. The session-scoped client also enforces this through RLS.
+  if (typeof negotiation_id === "string") {
+    const { data: owned } = await supabase
+      .from("negotiations")
+      .select("id")
+      .eq("id", negotiation_id)
+      .eq("user_id", user.id)
+      .maybeSingle();
+    if (!owned) {
+      return NextResponse.json({ error: "Negotiation not found" }, { status: 404 });
+    }
+  }
+
   const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000";
 
   const session = await stripe.checkout.sessions.create({
