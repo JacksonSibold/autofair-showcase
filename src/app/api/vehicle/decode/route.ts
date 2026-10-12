@@ -34,6 +34,10 @@ async function decodeVin(vin: string): Promise<NextResponse> {
       `https://vpic.nhtsa.dot.gov/api/vehicles/DecodeVinValues/${vin}?format=json`,
       { next: { revalidate: 86400 } }
     );
+    if (!res.ok) {
+      console.error("[nhtsa] VIN decode failed with status", res.status);
+      return NextResponse.json({ error: "VIN decoding service unavailable" }, { status: 502 });
+    }
     const data = await res.json();
     const r = data.Results?.[0];
     if (!r) {
@@ -78,6 +82,10 @@ async function lookupMakeModel(
       : `https://vpic.nhtsa.dot.gov/api/vehicles/GetModelsForMake/${encodedMake}?format=json`;
 
     const res = await fetch(url, { next: { revalidate: 86400 } });
+    if (!res.ok) {
+      console.error("[nhtsa] make/model lookup failed with status", res.status);
+      return NextResponse.json({ error: "Vehicle lookup service unavailable" }, { status: 502 });
+    }
     const data = await res.json();
 
     const models = (data.Results || []).map((r: Record<string, string>) => ({

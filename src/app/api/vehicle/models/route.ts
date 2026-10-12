@@ -26,6 +26,10 @@ export async function GET(request: NextRequest) {
       : `https://vpic.nhtsa.dot.gov/api/vehicles/GetModelsForMake/${encodedMake}?format=json`;
 
     const res = await fetch(url, { next: { revalidate: 86400 } });
+    if (!res.ok) {
+      console.error("[nhtsa] model list failed with status", res.status);
+      return NextResponse.json({ error: "Model list service unavailable" }, { status: 502 });
+    }
     const data = await res.json();
 
     const models = [
