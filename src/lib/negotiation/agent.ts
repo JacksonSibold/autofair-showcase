@@ -168,7 +168,7 @@ export async function processInboundMessage(
   sentiment: "positive" | "neutral" | "negative";
   needs_response: boolean;
 }> {
-  const prompt = `Analyze this dealer response to a car negotiation:
+  const prompt = `Analyze this dealer response to a car negotiation (received via ${channel}):
 
 "${inboundContent}"
 
