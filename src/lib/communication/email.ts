@@ -72,3 +72,12 @@ export function buildNegotiationEmailSubject(
   ];
   return subjects[Math.min(round, subjects.length - 1)];
 }
+
+/**
+ * Extracts the bare address from an RFC 5322-style value such as
+ * `"Dealer Sales" <buyer-abc@autofair.com>`. Plain addresses pass through.
+ */
+export function extractEmailAddress(raw: string): string {
+  const angle = raw.match(/<([^<>]+)>/);
+  return (angle ? angle[1] : raw).trim();
+}
