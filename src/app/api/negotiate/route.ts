@@ -5,14 +5,16 @@ import { generateNegotiationMessage } from "@/lib/negotiation/agent";
 import { sendEmail, generateAliasEmail, buildNegotiationEmailSubject } from "@/lib/communication/email";
 import { getPricing } from "@/lib/vehicle-data/pricing-engine";
 import type { Negotiation } from "@/types";
+import { isUuid, readJsonBody } from "@/lib/validation";
 
 export const dynamic = "force-dynamic";
 export const maxDuration = 60;
 
 export async function POST(request: NextRequest) {
-  const { negotiation_id } = await request.json();
-  if (!negotiation_id) {
-    return NextResponse.json({ error: "negotiation_id required" }, { status: 400 });
+  const body = await readJsonBody(request);
+  const negotiation_id = body?.negotiation_id;
+  if (!isUuid(negotiation_id)) {
+    return NextResponse.json({ error: "negotiation_id must be a UUID" }, { status: 400 });
   }
 
   const supabase = await createServiceClient();
