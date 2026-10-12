@@ -74,6 +74,8 @@ export default function VehicleSearchBar({ large = false, className }: VehicleSe
         <TabsContent value="vehicle">
           <form onSubmit={handleMakeModelSearch} className="flex flex-col sm:flex-row gap-2">
             <Input
+              aria-label="Model year"
+              inputMode="numeric"
               placeholder="Year (e.g. 2024)"
               value={year}
               onChange={(e) => setYear(e.target.value)}
@@ -84,6 +86,7 @@ export default function VehicleSearchBar({ large = false, className }: VehicleSe
               maxLength={4}
             />
             <Input
+              aria-label="Make"
               placeholder="Make (e.g. Toyota)"
               value={make}
               onChange={(e) => setMake(e.target.value)}
@@ -93,6 +96,7 @@ export default function VehicleSearchBar({ large = false, className }: VehicleSe
               )}
             />
             <Input
+              aria-label="Model (optional)"
               placeholder="Model (e.g. RAV4) — optional"
               value={model}
               onChange={(e) => setModel(e.target.value)}
@@ -116,6 +120,11 @@ export default function VehicleSearchBar({ large = false, className }: VehicleSe
           <form onSubmit={handleVinSearch} className="flex flex-col gap-2">
             <div className="flex gap-2">
               <Input
+                aria-label="Vehicle Identification Number (VIN)"
+                aria-invalid={vinError ? true : undefined}
+                aria-describedby={vinError ? "vin-error" : "vin-help"}
+                autoComplete="off"
+                spellCheck={false}
                 placeholder="Enter 17-character VIN (e.g. 1HGBH41JXMN109186)"
                 value={vin}
                 onChange={(e) => {
@@ -138,8 +147,12 @@ export default function VehicleSearchBar({ large = false, className }: VehicleSe
                 Decode VIN
               </Button>
             </div>
-            {vinError && <p className="text-destructive text-xs">{vinError}</p>}
-            <p className="text-xs text-muted-foreground">
+            {vinError && (
+              <p id="vin-error" role="alert" className="text-destructive text-xs">
+                {vinError}
+              </p>
+            )}
+            <p id="vin-help" className="text-xs text-muted-foreground">
               Find your VIN on the driver-side door jamb or windshield (bottom-left corner).
             </p>
           </form>
