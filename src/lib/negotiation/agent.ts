@@ -145,7 +145,7 @@ ${dealerNeg.messages
   .map((m: NegotiationMessage) => `[${m.direction === "outbound" ? "Alex (us)" : "Dealer"}]: ${m.content}`)
   .join("\n\n")}
 
-Write the next negotiation message from Alex. Keep it under 200 words. Be professional, reference market data, push for a lower price. Do not say you are an AI.`,
+Write the next negotiation message from Alex. Keep it under 200 words. Be professional, reference market data, push for a lower price. If asked, or where it is natural, identify yourself as an AI assistant acting for the buyer; never claim to be a human representative.`,
     },
   ];
 

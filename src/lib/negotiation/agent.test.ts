@@ -93,6 +93,9 @@ describe("generateNegotiationMessage", () => {
     const call = create.mock.calls[0][0];
     expect(call.model).toBe("gpt-4o");
     expect(call.messages[1].content).toContain("Fair market price: $28,000");
+    // The user prompt must not contradict the system prompt's AI-disclosure rule.
+    expect(call.messages[1].content).not.toMatch(/Do not say you are an AI/);
+    expect(call.messages[0].content).toMatch(/identify yourself clearly as an AI/);
   });
 });
 
