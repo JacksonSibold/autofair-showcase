@@ -44,8 +44,12 @@ async function fetchMarketCheckListings(params: PricingParams): Promise<{
     const res = await fetch(`${base}/search/car/active?${queryParams}`, {
       cache: "no-store",
     });
+    if (!res.ok) {
+      console.error("[MarketCheck] listing search failed with status", res.status);
+      return { listings: [], nationwide_count: 0, regional_count: 0 };
+    }
     const data = await res.json();
-    console.log("[MarketCheck] status:", res.status, "num_found:", data.num_found, "listings:", data.listings?.length ?? 0, "error:", data.error ?? data.message ?? null);
+    console.log("[MarketCheck] status:", res.status, "num_found:", data.num_found, "listings:", data.listings?.length ?? 0);
 
     const listings: ComparableListing[] = (data.listings || []).map(
       (l: Record<string, unknown>) => ({
@@ -182,6 +186,10 @@ async function fetchOEMIncentives(
       `https://mc-api.marketcheck.com/v2/incentives?${params}`,
       { cache: "no-store" }
     );
+    if (!res.ok) {
+      console.error("[MarketCheck] incentives lookup failed with status", res.status);
+      return [];
+    }
     const data = await res.json();
     return (data.incentives || []).map((inc: Record<string, unknown>) => ({
       name: inc.name as string,
