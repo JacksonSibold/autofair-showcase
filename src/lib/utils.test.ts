@@ -43,6 +43,11 @@ describe("slugify", () => {
     expect(slugify("Toyota RAV4 XLE!")).toBe("toyota-rav4-xle");
   });
 
+  it("collapses repeated hyphens and trims them from the ends", () => {
+    expect(slugify("Toyota RAV4 (XLE) & more!")).toBe("toyota-rav4-xle-more");
+    expect(slugify("  --Honda--  ")).toBe("honda");
+  });
+
   it("keeps existing hyphens and digits", () => {
     expect(slugify("Mercedes-Benz 2024")).toBe("mercedes-benz-2024");
   });
