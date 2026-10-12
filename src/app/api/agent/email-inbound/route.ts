@@ -10,20 +10,17 @@ export async function POST(request: NextRequest) {
 
   let toEmail = "";
   let fromEmail = "";
-  let subject = "";
   let body = "";
 
   if (contentType.includes("multipart/form-data")) {
     const form = await request.formData();
     toEmail = String(form.get("to") ?? "");
     fromEmail = String(form.get("from") ?? "");
-    subject = String(form.get("subject") ?? "");
     body = String(form.get("text") ?? form.get("html") ?? "");
   } else {
     const json = await request.json().catch(() => ({}));
     toEmail = json.to ?? "";
     fromEmail = json.from ?? "";
-    subject = json.subject ?? "";
     body = json.body ?? json.text ?? "";
   }
 
